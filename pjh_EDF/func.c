@@ -105,10 +105,13 @@ int* edf_schedule(PROC *p, int proc_num, int hyper_period) {
         }
         else {
             r_proc[selected_proc].l_burst--;
-            printf("(%d %d) : CPU %d, left burst %d\n", timer, timer+1, selected_proc, r_proc[selected_proc].l_burst);
+            printf("(%d %d) : CPU %d, left burst %d\n", timer, timer+1, selected_proc+1, r_proc[selected_proc].l_burst);
         }
 
         for(int j=0; j<proc_num; j++) {
+            // arrival time에 맞추지 못한 process는 거름
+            if(r_proc[j].n_period == 0) continue;
+
             if((timer+1)%r_proc[j].n_period == 0) { // 주기가 지났다면
                 r_proc[j].l_burst = p[j].burst;
                 r_proc[j].l_deadline = p[j].deadline;
@@ -126,5 +129,5 @@ int* edf_schedule(PROC *p, int proc_num, int hyper_period) {
 }
 
 void make_gantt_chart(int *result) {
-    
+
 }
