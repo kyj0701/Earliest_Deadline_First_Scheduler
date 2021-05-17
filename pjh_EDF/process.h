@@ -24,4 +24,4 @@ void get_process_info(PROC *p, int proc_num);
 int check_cpu_util(PROC *p, int proc_num);
 int cal_hyper_period(PROC *p, int proc_num);
 int* edf_schedule(PROC *p, int proc_num, int hyper_period);
-void make_gantt_chart(int *result);
+void make_gantt_chart(int *result, int proc_num, int hyper_period);

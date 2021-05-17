@@ -34,6 +34,8 @@ void get_process_info(PROC *p, int proc_num) {
     for(int i=0; i<proc_num; i++) {
         printf("%4d | %4d %4d %4d %4d\n", i+1, p[i].arrival, p[i].burst, p[i].deadline, p[i].period);
     }
+
+    fclose(InputFile);
 }
 
 int check_cpu_util(PROC *p, int proc_num) {
@@ -67,7 +69,12 @@ int* edf_schedule(PROC *p, int proc_num, int hyper_period) {
     int *result = (int *)malloc(hyper_period * sizeof(int));
     int r_proc_cnt = proc_num;
 
+    memset(result, 0, hyper_period);
+
     for(int timer=0; timer<hyper_period; timer++) {
+        selected_proc = -1;
+        selected_proc_deadline = hyper_period;
+
         // arrival time에 맞춰서
         if(r_proc_cnt > 0) {
             for(int j=0; j<proc_num; j++) {
@@ -82,13 +89,12 @@ int* edf_schedule(PROC *p, int proc_num, int hyper_period) {
 
         // 현재 실행되고 있는 process가 없음
         if(r_proc_cnt == proc_num) {
+            result[timer] = selected_proc;
             printf("(%d %d) : CPU IDLE\n", timer, timer+1);
             continue;
         }
 
         // CPU에 올릴 process 선택
-        selected_proc = -1;
-        selected_proc_deadline = hyper_period;
         for(int j=0; j<proc_num; j++) {
             if(r_proc[j].l_burst > 0) {
                 if(selected_proc_deadline > r_proc[j].l_deadline) {
@@ -128,6 +134,35 @@ int* edf_schedule(PROC *p, int proc_num, int hyper_period) {
     return result;
 }
 
-void make_gantt_chart(int *result) {
+void make_gantt_chart(int *result, int proc_num, int hyper_period) {
+    char *res[101];
+    FILE *OutputFile = fopen("output.txt", "w");
 
+    for(int i=0; i<proc_num; i++) {
+        res[i] = (char *)malloc((hyper_period * 2) * sizeof(char));
+        memset(res[i], 0, hyper_period * 2);
+
+        char num[10];
+        sprintf(num, "P%d |", i+1);
+
+        strcat(res[i], num);
+    }
+
+    for(int timer=0; timer<hyper_period; timer++) {
+        int cur_burst = result[timer];
+        for(int i=0; i<proc_num; i++) {
+            if(cur_burst == i) strcat(res[i], "-");
+            else strcat(res[i], " ");
+        }
+    }
+    printf("\n");
+    
+    for(int i=0; i<proc_num; i++) {
+        strcat(res[i], "|");
+        printf("%s\n", res[i]);
+        fprintf(OutputFile, "%s\n", res[i]);
+    }
+
+    for(int i=0; i<proc_num; i++) free(res[i]);
+    fclose(OutputFile);
 }

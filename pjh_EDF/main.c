@@ -32,7 +32,7 @@ int main(int argc, char **argv) {
 
         int *result = edf_schedule(p, proc_num, hyper_period);
 
-        make_gantt_chart(result);
+        make_gantt_chart(result, proc_num, hyper_period);
     } else {
         printf("cannot scheduling..\n");
         exit(0);
