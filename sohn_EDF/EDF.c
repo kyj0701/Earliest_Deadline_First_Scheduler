@@ -9,6 +9,40 @@ int deadline[101];
 int process_num;
 int hyper_period;
 
+int gcd(int a, int b);
+int lcm(int a, int b);
+int n_lcm(int num[]);
+int load_data();
+double schedulability();
+void GanttChart(int* schedule);
+void edf();
+
+
+int main(){
+
+    process_num = load_data();
+    
+    hyper_period = n_lcm(period);
+
+    double schedulable = schedulability();
+    printf("\n%lf ", schedulable);
+    if(schedulable <= 1){
+        printf("can schedule\n\n");
+    }
+    else{
+        printf("not to schedule\n\n");
+        return 0;
+    }
+
+    for(int i = 0; i < process_num; i++){
+        printf("%d %d %d\n", period[i], burst[i], deadline[i]);
+    }
+  
+    edf();
+
+    return 0;
+}
+
 
 int gcd(int a, int b){
 
@@ -163,30 +197,4 @@ void edf(){
     
     GanttChart(schedule);
 
-}
-
-
-int main(){
-
-    process_num = load_data();
-    
-    hyper_period = n_lcm(period);
-
-    double schedulable = schedulability();
-    printf("\n%lf ", schedulable);
-    if(schedulable <= 1){
-        printf("can schedule\n\n");
-    }
-    else{
-        printf("not to schedule\n\n");
-        return 0;
-    }
-
-    for(int i = 0; i < process_num; i++){
-        printf("%d %d %d\n", period[i], burst[i], deadline[i]);
-    }
-  
-    edf();
-
-    return 0;
 }

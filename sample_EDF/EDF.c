@@ -12,6 +12,50 @@ char help[255];
 int i,j,h;
 float f;
 
+void getProcesses();
+void getPeriodsLCM();
+float schedulability();
+void schedule();
+
+
+int main()
+{
+	
+	
+	printf("EDF Programme \n");
+	// for(i=0; i<1024000; i++);
+	printf("done \n");
+	
+	
+	printf("\n\nOur System :\n");
+	getProcesses();
+	
+	
+	
+	printf("\n\nPeriods LCM :\n");
+	getPeriodsLCM();
+	
+	
+	
+	printf("\n\nSchedulability Test :\n");
+	f = schedulability();
+	if(f <= 1)
+	{
+		printf("\n This Real Time System Is Schedulable because %f <= 1", f);
+		schedule();
+	}
+	else
+	{
+		printf("\nThis Real Time System Is Not Schedulable because %f > 1",f);
+		FILE *OutputtFile;
+		OutputtFile = fopen("output.txt", "w");
+		fprintf(OutputtFile, "This Real Time System Is Not Schedulable because %f > 1",f);
+		fclose(OutputtFile);
+		exit(0);
+	}
+}
+
+
 void getProcesses()
 {
 	FILE *InputFile;
@@ -171,41 +215,4 @@ void schedule()
 	fclose(OutputtFile);
 
 
-}
-
-int main()
-{
-	
-	
-	printf("EDF Programme \n");
-	// for(i=0; i<1024000; i++);
-	printf("done \n");
-	
-	
-	printf("\n\nOur System :\n");
-	getProcesses();
-	
-	
-	
-	printf("\n\nPeriods LCM :\n");
-	getPeriodsLCM();
-	
-	
-	
-	printf("\n\nSchedulability Test :\n");
-	f = schedulability();
-	if(f <= 1)
-	{
-		printf("\n This Real Time System Is Schedulable because %f <= 1", f);
-		schedule();
-	}
-	else
-	{
-		printf("\nThis Real Time System Is Not Schedulable because %f > 1",f);
-		FILE *OutputtFile;
-		OutputtFile = fopen("output.txt", "w");
-		fprintf(OutputtFile, "This Real Time System Is Not Schedulable because %f > 1",f);
-		fclose(OutputtFile);
-		exit(0);
-	}
 }
