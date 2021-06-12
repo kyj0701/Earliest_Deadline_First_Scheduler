@@ -33,23 +33,11 @@ int get_process_info(PROC *p, int *proc_num) {
     return largest_deadline;
 }
 
-int check_cpu_util(RPROC *r_proc, int cur_proc, float *util, int flag) {
-
-    if(flag == 0) { // minus
-        *util = *util - (1.0 / (float)r_proc[cur_proc].l_deadline);
-    } else {
-        *util = *util + (1.0 / (float)r_proc[cur_proc].l_deadline);
-    }
-
-    return *util;
-}
-
 int* edf_schedule(PROC *p, int proc_num, int largest_deadline) {
     int selected_proc;
     int selected_proc_deadline;
     RPROC *r_proc = malloc(proc_num * sizeof(RPROC));
     int *result = (int *)malloc(largest_deadline * sizeof(int));
-    float util = 0;
     int r_proc_cnt = proc_num;
 
     memset(r_proc, 0, proc_num * sizeof(RPROC));
@@ -64,7 +52,6 @@ int* edf_schedule(PROC *p, int proc_num, int largest_deadline) {
             for(int j=0; j<proc_num; j++) {
                 if(p[j].arrival == timer) {
                     if(p[j].arrival >= p[j].deadline) continue;
-                    if(util >= 1) continue;
 
                     r_proc[j].l_burst = p[j].burst;
                     r_proc[j].l_deadline = p[j].deadline;
@@ -85,11 +72,6 @@ int* edf_schedule(PROC *p, int proc_num, int largest_deadline) {
         for(int j=0; j<proc_num; j++) {
             if(r_proc[j].l_burst > 0 && r_proc[j].isrun == 1) {
                 if(selected_proc_deadline >= r_proc[j].l_deadline) {
-                    if(selected_proc != -1)
-                        check_cpu_util(r_proc, selected_proc, &util, 0);
-
-                    check_cpu_util(r_proc, j, &util, 1);
-
                     selected_proc = j;
                     selected_proc_deadline = r_proc[j].l_deadline;
                 }
@@ -103,7 +85,6 @@ int* edf_schedule(PROC *p, int proc_num, int largest_deadline) {
         }
         else {
             r_proc[selected_proc].l_burst--;
-            check_cpu_util(r_proc, selected_proc, &util, 0); // minus
             printf("(%d %d) : CPU %d, left burst %d\n", timer, timer+1, selected_proc+1, r_proc[selected_proc].l_burst);
         }
 

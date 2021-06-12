@@ -17,5 +17,4 @@ typedef struct _RPROC {
 } RPROC;
 
 int get_process_info(PROC *p, int *proc_num);
-int check_cpu_util(RPROC *r_proc, int cur_proc, float *util, int flag);
 int* edf_schedule(PROC *p, int proc_num, int largest_deadline);

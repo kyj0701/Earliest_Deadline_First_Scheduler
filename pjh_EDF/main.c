@@ -15,7 +15,8 @@ int main() {
 
     FILE *output = fopen("output.txt", "w");
     for(int i=0; i < largest_deadline; i++) {
-        fprintf(output, "%d ", result[i]);
+        if(i == largest_deadline - 1) fprintf(output, "%d", result[i]);
+        else fprintf(output, "%d ", result[i]);
     }
 
     free(p);
